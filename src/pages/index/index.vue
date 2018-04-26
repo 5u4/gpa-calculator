@@ -1,105 +1,102 @@
 <template>
-  <div class="container" @click="clickHandle('test click', $event)">
-
-    <div class="userinfo" @click="bindViewTap">
-      <img class="userinfo-avatar" v-if="userInfo.avatarUrl" :src="userInfo.avatarUrl" background-size="cover" />
-      <div class="userinfo-nickname">
-        <card :text="userInfo.nickName"></card>
-      </div>
+    <div class="container">
+        <!-- Title -->
+        <p>Calculator</p>
+        <!-- Scale Change -->
+        <div>
+            <button @click="changeScale(4.33)">4.33</button>
+            <button @click="changeScale(4.00)">4.00</button>
+            Scale: {{ getScale }}
+        </div>
+        <!-- Average -->
+        <div>
+            Average: {{getAverageGrade}}
+        </div>
+        <!-- Add Course -->
+        <div>
+            <form>
+                <input type="text" v-model="grade" placeholder="Grade">
+                <input type="number" v-model="credit" placeholder="Credit">
+                <button @click="addCourse()">Add Course</button>
+            </form>
+        </div>
+        <!-- Course List -->
+        <div>
+            <ul>
+                <li v-for="course in courses" :key="Math.random()">
+                    Grade: {{ course.grade }}, Credit: {{ course.credit }}
+                </li>
+            </ul>
+        </div>
+        <!-- Clear -->
+        <div>
+            <button @click="clear()">Clear</button>
+        </div>
     </div>
-
-    <div class="usermotto">
-      <div class="user-motto">
-        <card :text="motto"></card>
-      </div>
-    </div>
-
-    <form class="form-container">
-      <input type="text" class="form-control" v-model="motto" placeholder="v-model" />
-      <input type="text" class="form-control" v-model.lazy="motto" placeholder="v-model.lazy" />
-    </form>
-    <a href="/pages/counter/main" class="counter">去往Vuex示例页面</a>
-  </div>
 </template>
 
 <script>
-import card from '@/components/card'
+import { scaleOfFourPointThreeThree } from './scales';
 
 export default {
-  data () {
-    return {
-      motto: 'Hello World',
-      userInfo: {}
-    }
-  },
-
-  components: {
-    card
-  },
-
-  methods: {
-    bindViewTap () {
-      const url = '../logs/main'
-      wx.navigateTo({ url })
-    },
-    getUserInfo () {
-      // 调用登录接口
-      wx.login({
-        success: () => {
-          wx.getUserInfo({
-            success: (res) => {
-              this.userInfo = res.userInfo
-            }
-          })
+    data () {
+        return {
+            scale: scaleOfFourPointThreeThree,
+            courses: [],
+            grade: null,
+            credit: null
         }
-      })
     },
-    clickHandle (msg, ev) {
-      console.log('clickHandle:', msg, ev)
+    computed: {
+        getScale() {
+            return this.scale["A+"];
+        },
+        getTotalCredits() {
+            let total = 0;
+            this.courses.forEach(course => {
+                total += parseInt(course.credit);
+            });
+            return total;
+        },
+        getTotalGrades() {
+            let total = 0;
+            this.courses.forEach(course => {
+                total += parseFloat(
+                    this.scale[course.grade]
+                ) * parseInt(course.credit);
+            })
+            return total;
+        },
+        getAverageGrade() {
+            const grade = this.getTotalGrades / this.getTotalCredits;
+            if (!grade) {
+                return 0;
+            } else {
+                return grade.toFixed(2);
+            }
+        }
+    },
+    methods: {
+        changeScale(scale) {
+            if (scale == 4.33) {
+                this.scale = scaleOfFourPointThreeThree;
+            }
+        },
+        addCourse() {
+            this.courses.push({
+                grade: this.grade,
+                credit: this.credit
+            });
+            this.grade = null;
+            this.credit = null;
+        },
+        clear() {
+            this.courses = [];
+        }
     }
-  },
-
-  created () {
-    // 调用应用实例的方法获取全局数据
-    this.getUserInfo()
-  }
-}
+};
 </script>
 
-<style scoped>
-.userinfo {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
+<style>
 
-.userinfo-avatar {
-  width: 128rpx;
-  height: 128rpx;
-  margin: 20rpx;
-  border-radius: 50%;
-}
-
-.userinfo-nickname {
-  color: #aaa;
-}
-
-.usermotto {
-  margin-top: 150px;
-}
-
-.form-control {
-  display: block;
-  padding: 0 12px;
-  margin-bottom: 5px;
-  border: 1px solid #ccc;
-}
-
-.counter {
-  display: inline-block;
-  margin: 10px auto;
-  padding: 5px 10px;
-  color: blue;
-  border: 1px solid blue;
-}
 </style>
