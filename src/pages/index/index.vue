@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import { scaleOfFourPointThreeThree } from './scales';
+import { scaleOfFourPointThreeThree, scaleOfFour } from './scales';
 
 export default {
     data () {
@@ -49,7 +49,7 @@ export default {
     },
     computed: {
         getScale() {
-            return this.scale["A+"];
+            return this.scale["A+"].toFixed(2);
         },
         getTotalCredits() {
             let total = 0;
@@ -80,6 +80,8 @@ export default {
         changeScale(scale) {
             if (scale == 4.33) {
                 this.scale = scaleOfFourPointThreeThree;
+            } else {
+                this.scale = scaleOfFour;
             }
         },
         addCourse() {
