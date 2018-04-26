@@ -1,21 +1,11 @@
-# gpa-calculator
+# GPA Calculator
 
-> GPA Calculator
+## Description
 
-## Build Setup
+A Wechat mini program built on [mpvue](http://mpvue.com/) for calculating GPA in 4.00 and 4.33 scales.
 
-``` bash
-# install dependencies
-npm install
+## Screenshots
 
-# serve with hot reload at localhost:8080
-npm run dev
+### Average Calculation
 
-# build for production with minification
-npm run build
-
-# build for production and view the bundle analyzer report
-npm run build --report
-```
-
-For detailed explanation on how things work, checkout the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+![](screenshots/average-calculation.png)
