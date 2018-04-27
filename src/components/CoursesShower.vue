@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div style="margin-bottom: 15px">
         <ul>
             <li v-for="course in courses" :key="Math.random()">
                 Grade: {{ course.grade }}, Credit: {{ course.credit }}
